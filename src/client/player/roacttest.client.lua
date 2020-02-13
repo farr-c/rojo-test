@@ -61,5 +61,6 @@ local PlayerGui = Players.LocalPlayer.PlayerGui
 local handle = Roact.mount(Roact.createElement(Clock), PlayerGui, "Clock UI")
 
 -- Later, we can destroy our UI and disconnect everything correctly.
+
 wait(30)
 Roact.unmount(handle)

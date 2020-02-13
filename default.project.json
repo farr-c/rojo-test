@@ -1,0 +1,40 @@
+{
+  "name": "TemplateGame",
+  "tree": {
+    "$className": "DataModel",
+    "HttpService": {
+      "$className": "HttpService",
+      "$properties": {
+        "HttpEnabled": true
+      }
+    },
+    "ReplicatedStorage": {
+      "$className": "ReplicatedStorage",
+      "Client": {
+        "$path": "src/client/modules"
+      },
+      "Shared": {
+        "$path": "src/shared"
+      }
+    },
+    "ReplicatedFirst": {
+      "$className": "ReplicatedFirst",
+      "$path": "src/client/first"
+    },
+    "ServerScriptService": {
+      "$className": "ServerScriptService",
+      "$path": "src/server"
+    },
+    "StarterPlayer": {
+     "$className": "StarterPlayer",
+      "StarterPlayerScripts": {
+          "$className": "StarterPlayerScripts",
+          "$path": "src/client/player"
+      },
+      "StarterCharacterScripts": {
+        "$className": "StarterCharacterScripts",
+        "$path": "src/client/character"
+    }
+    }
+  }
+}

@@ -1,1 +1,3 @@
+[rules]
+lint_4 = "allow"
 std = "roblox"

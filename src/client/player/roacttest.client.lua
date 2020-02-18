@@ -1,12 +1,27 @@
+wait(3)
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 
-local Roact = require(ReplicatedStorage.Shared.lib.Roact)
+local Roact = shared.import("Roact")
+local Otter = shared.import("otter")
 
 local Clock = Roact.Component:extend("Clock")
 
+local mouse = game.Players.LocalPlayer:GetMouse()
+
+local positionMotor = Otter.createGroupMotor({
+    x = 0,
+    y = 0,
+})
+
+
 function Clock:init()
     -- In init, we can use setState to set up our initial component state.
+    self.clickCount, self.updateClickCount = Roact.createBinding(0)
+    positionMotor:onStep(function(value)
+        self.updateClickCount (value)
+    end)
+    
     self:setState({
         currentTime = 0
     })
@@ -19,15 +34,24 @@ function Clock:render()
 
     return Roact.createElement("ScreenGui", {}, {
         TimeLabel = Roact.createElement("TextLabel", {
-            Size = UDim2.new(1, 0, 1, 0),
+            Size = UDim2.new(0.2, 0, 0.2, 0),
+            Position = UDim2.new(0.4,0,0.4,0),
             Text = "Time Elapsed: " .. currentTime,
-            Visible = self.state.isVisible
         })
     })
 end
 
 -- Set up our loop in didMount, so that it starts running when our
 -- component is created.
+
+
+local function updateMotor()
+    positionMotor:setGoal({
+        x = Otter.spring(mouse.X),
+        y = Otter.spring(mouse.Y),
+    })
+end
+
 function Clock:didMount()
     -- Set a value that we can change later to stop our loop
     self.running = true
@@ -39,9 +63,10 @@ function Clock:didMount()
             -- variant of setState. This will matter more when Roact gets
             -- asynchronous rendering!
             self:setState(function(state)
+                updateMotor()
                 return {
                     currentTime = state.currentTime + 1,
-                    isVisible = not state.isVisible
+                    --isVisible = not state.isVisible
                 }
             end)
             wait(1)
@@ -55,7 +80,15 @@ function Clock:willUnmount()
     self.running = false
 end
 
+
+
+
+mouse.Move:Connect(updateMotor)
+
 local PlayerGui = Players.LocalPlayer.PlayerGui
+
+
+
 
 -- Create our UI, which now runs on its own!
 local handle = Roact.mount(Roact.createElement(Clock), PlayerGui, "Clock UI")
